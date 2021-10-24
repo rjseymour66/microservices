@@ -1,6 +1,6 @@
 package microservices.book.gamification.game;
 
-import microservices.book.gamification.domain.LeaderBoardRow;
+import microservices.book.gamification.game.domain.LeaderBoardRow;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

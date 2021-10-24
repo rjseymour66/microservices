@@ -1,7 +1,7 @@
 package microservices.book.gamification.game.badgeprocessors;
 
-import microservices.book.gamification.domain.BadgeType;
-import microservices.book.gamification.domain.ScoreCard;
+import microservices.book.gamification.game.domain.BadgeType;
+import microservices.book.gamification.game.domain.ScoreCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

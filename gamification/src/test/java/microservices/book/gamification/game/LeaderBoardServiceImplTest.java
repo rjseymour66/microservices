@@ -1,10 +1,9 @@
 package microservices.book.gamification.game;
 
 
-import microservices.book.gamification.domain.BadgeCard;
-import microservices.book.gamification.domain.BadgeType;
-import microservices.book.gamification.domain.LeaderBoardRow;
-import microservices.book.gamification.domain.LeaderBoardServiceImpl;
+import microservices.book.gamification.game.domain.BadgeCard;
+import microservices.book.gamification.game.domain.BadgeType;
+import microservices.book.gamification.game.domain.LeaderBoardRow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

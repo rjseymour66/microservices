@@ -1,7 +1,7 @@
 package microservices.book.gamification.game;
 
-import microservices.book.gamification.domain.LeaderBoardRow;
-import microservices.book.gamification.domain.ScoreCard;
+import microservices.book.gamification.game.domain.LeaderBoardRow;
+import microservices.book.gamification.game.domain.ScoreCard;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -44,4 +44,5 @@ public interface ScoreRepository extends CrudRepository<ScoreCard, Long> {
      * sorted by most recent.
      */
     List<ScoreCard> findByUserIdOrderByScoreTimestampDesc(final Long userId);
+
 }

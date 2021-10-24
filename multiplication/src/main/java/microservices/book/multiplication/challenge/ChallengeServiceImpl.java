@@ -2,8 +2,10 @@ package microservices.book.multiplication.challenge;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import microservices.book.multiplication.serviceclients.GamificationServiceClient;
 import microservices.book.multiplication.user.User;
 import microservices.book.multiplication.user.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     private final UserRepository userRepository;
     private final ChallengeAttemptRepository attemptRepository;
+    private final ChallengeEventPub challengeEventPub;
 
     @Override
     public ChallengeAttempt verifyAttempt(ChallengeAttemptDTO attemptDTO) {
@@ -40,8 +43,11 @@ public class ChallengeServiceImpl implements ChallengeService {
                 attemptDTO.getGuess(),
                 isCorrect);
 
-        // Store the attempt
+        // Stores the attempt
         ChallengeAttempt storedAttempt = attemptRepository.save(checkedAttempt);
+
+        // Publishes an event to notify potentially interested subscribers
+        challengeEventPub.challengeSolved(storedAttempt);
 
         return storedAttempt;
     }

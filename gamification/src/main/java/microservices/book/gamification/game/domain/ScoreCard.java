@@ -1,4 +1,4 @@
-package microservices.book.gamification.domain;
+package microservices.book.gamification.game.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,17 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * This class represents the Score linked to an attempt in the game, with
- * an associated user and the timestamp in which the score is registered.
+ * This class represents the Score linked to an attempt in the game,
+ * with an associated user and the timestamp in which the score
+ * is registered.
  */
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScoreCard {
 
-    // The default score assigned to this card, if not specified
+    // The default score assigned to this card, if not specified.
     public static final int DEFAULT_SCORE = 10;
 
     @Id
@@ -35,4 +35,5 @@ public class ScoreCard {
     public ScoreCard(final Long userId, final Long attemptId) {
         this(null, userId, attemptId, System.currentTimeMillis(), DEFAULT_SCORE);
     }
+
 }

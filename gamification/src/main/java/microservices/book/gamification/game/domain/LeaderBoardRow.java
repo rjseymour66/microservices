@@ -1,4 +1,4 @@
-package microservices.book.gamification.domain;
+package microservices.book.gamification.game.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;
@@ -6,6 +6,9 @@ import lombok.With;
 
 import java.util.List;
 
+/**
+ * Represents a line in our Leaderboard.
+ */
 @Value
 @AllArgsConstructor
 public class LeaderBoardRow {
@@ -20,4 +23,5 @@ public class LeaderBoardRow {
         this.totalScore = totalScore;
         this.badges = List.of();
     }
+
 }

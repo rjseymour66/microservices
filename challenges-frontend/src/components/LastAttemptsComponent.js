@@ -6,11 +6,11 @@ class LastAttemptsComponent extends React.Component {
         return (
             <table>
                 <thead>
-                    <tr>
-                        <th>Challenge</th>
-                        <th>Your guess</th>
-                        <th>Correct</th>
-                    </tr>
+                <tr>
+                    <th>Challenge</th>
+                    <th>Your guess</th>
+                    <th>Correct</th>
+                </tr>
                 </thead>
                 <tbody>
                 {this.props.lastAttempts.map(a =>

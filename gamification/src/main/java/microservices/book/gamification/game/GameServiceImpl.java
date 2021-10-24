@@ -2,24 +2,24 @@ package microservices.book.gamification.game;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import microservices.book.gamification.challenge.ChallengeSolvedDTO;
-import microservices.book.gamification.domain.BadgeCard;
-import microservices.book.gamification.domain.BadgeType;
-import microservices.book.gamification.domain.ScoreCard;
-import org.hibernate.engine.loading.internal.CollectionLoadContext;
+import microservices.book.gamification.challenge.ChallengeSolvedEvent;
+import microservices.book.gamification.game.badgeprocessors.BadgeProcessor;
+import microservices.book.gamification.game.domain.BadgeCard;
+import microservices.book.gamification.game.domain.BadgeType;
+import microservices.book.gamification.game.domain.ScoreCard;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GameServiceImpl implements GameService {
+class GameServiceImpl implements GameService {
 
     private final ScoreRepository scoreRepository;
     private final BadgeRepository badgeRepository;
@@ -27,7 +27,7 @@ public class GameServiceImpl implements GameService {
     private final List<BadgeProcessor> badgeProcessors;
 
     @Override
-    public GameResult newAttemptForUser(final ChallengeSolvedDTO challenge) {
+    public GameResult newAttemptForUser(final ChallengeSolvedEvent challenge) {
         // We give points only if it's correct
         if (challenge.isCorrect()) {
             ScoreCard scoreCard = new ScoreCard(challenge.getUserId(),
@@ -42,7 +42,7 @@ public class GameServiceImpl implements GameService {
                             .collect(Collectors.toList()));
         } else {
             log.info("Attempt id {} is not correct. " +
-                    "User {} does not get score.",
+                            "User {} does not get score.",
                     challenge.getAttemptId(),
                     challenge.getUserAlias());
             return new GameResult(0, List.of());
@@ -53,8 +53,10 @@ public class GameServiceImpl implements GameService {
      * Checks the total score and the different score cards obtained
      * to give new badges in case their conditions are met.
      */
-    private List<BadgeCard> processForBadges(final ChallengeSolvedDTO solvedChallenge) {
-        Optional<Integer> optTotalScore = scoreRepository.getTotalScoreForUser(solvedChallenge.getUserId());
+    private List<BadgeCard> processForBadges(
+            final ChallengeSolvedEvent solvedChallenge) {
+        Optional<Integer> optTotalScore = scoreRepository.
+                getTotalScoreForUser(solvedChallenge.getUserId());
         if (optTotalScore.isEmpty()) return Collections.emptyList();
         int totalScore = optTotalScore.get();
 
@@ -62,7 +64,7 @@ public class GameServiceImpl implements GameService {
         List<ScoreCard> scoreCardList = scoreRepository
                 .findByUserIdOrderByScoreTimestampDesc(solvedChallenge.getUserId());
         Set<BadgeType> alreadyGotBadges = badgeRepository
-                .findUserIdOrderByBadgeTimestampDesc(solvedChallenge.getUserId())
+                .findByUserIdOrderByBadgeTimestampDesc(solvedChallenge.getUserId())
                 .stream()
                 .map(BadgeCard::getBadgeType)
                 .collect(Collectors.toSet());
@@ -71,12 +73,17 @@ public class GameServiceImpl implements GameService {
         List<BadgeCard> newBadgeCards = badgeProcessors.stream()
                 .filter(bp -> !alreadyGotBadges.contains(bp.badgeType()))
                 .map(bp -> bp.processForOptionalBadge(totalScore,
-                        scoreCardList, solvedChallenge))
-                .flatMap(Optional::stream) // returns an empty stream if empty
+                        scoreCardList, solvedChallenge)
+                ).flatMap(Optional::stream) // returns an empty stream if empty
                 // maps the optionals if present to new BadgeCards
-                .map(badgeType -> new BadgeCard(solvedChallenge.getUserId(), badgeType))
-                        .collect(Collectors.toList());
-                badgeRepository.saveAll(newBadgeCards);
-                return newBadgeCards;
+                .map(badgeType ->
+                        new BadgeCard(solvedChallenge.getUserId(), badgeType)
+                )
+                .collect(Collectors.toList());
+
+        badgeRepository.saveAll(newBadgeCards);
+
+        return newBadgeCards;
     }
+
 }

@@ -1,9 +1,10 @@
 package microservices.book.gamification.game;
 
-import microservices.book.gamification.challenge.ChallengeSolvedDTO;
-import microservices.book.gamification.domain.BadgeCard;
-import microservices.book.gamification.domain.BadgeType;
-import microservices.book.gamification.domain.ScoreCard;
+import microservices.book.gamification.challenge.ChallengeSolvedEvent;
+import microservices.book.gamification.game.badgeprocessors.BadgeProcessor;
+import microservices.book.gamification.game.domain.BadgeCard;
+import microservices.book.gamification.game.domain.BadgeType;
+import microservices.book.gamification.game.domain.ScoreCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +17,6 @@ import java.util.Optional;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class GameServiceImplTest {
@@ -44,7 +43,7 @@ public class GameServiceImplTest {
     public void processCorrectAttemptTest() {
         // given
         long userId = 1L, attemptId = 10L;
-        var attempt = new ChallengeSolvedDTO(attemptId, true, 20, 70, userId, "john");
+        var attempt = new ChallengeSolvedEvent(attemptId, true, 20, 70, userId, "john");
         ScoreCard scoreCard = new ScoreCard(userId, attemptId);
         given(scoreRepository.getTotalScoreForUser(userId))
                 .willReturn(Optional.of(10));
@@ -75,7 +74,7 @@ public class GameServiceImplTest {
     public void processWrongAttemptTest() {
         // when
         GameService.GameResult gameResult = gameService.newAttemptForUser(
-                new ChallengeSolvedDTO(10L, false, 10, 10, 1L, "john")
+                new ChallengeSolvedEvent(10L, false, 10, 10, 1L, "john")
         );
 
         // then - shouldn't score anything

@@ -1,4 +1,4 @@
-package microservices.book.gamification.domain;
+package microservices.book.gamification.game.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * Enumeration with the different types of Badges that a user can win.
  */
-
 @RequiredArgsConstructor
 @Getter
 public enum BadgeType {
@@ -14,9 +13,9 @@ public enum BadgeType {
     // Badges depending on score
     BRONZE("Bronze"),
     SILVER("Silver"),
-    GOLD("GOLD"),
+    GOLD("Gold"),
 
-    // other badges won for different conditions
+    // Other badges won for different conditions
     FIRST_WON("First time"),
     LUCKY_NUMBER("Lucky number");
 

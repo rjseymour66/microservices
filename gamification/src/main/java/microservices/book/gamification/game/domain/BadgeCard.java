@@ -1,4 +1,4 @@
-package microservices.book.gamification.domain;
+package microservices.book.gamification.game.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/**
+ * This class links a Badge to a User. Contains also a timestamp with the moment in which the user got it.
+ */
 @Entity
 @Data
 @AllArgsConstructor
